@@ -1,0 +1,17 @@
+## load data
+inidata <- read.table("household_power_consumption.txt",sep = ";",header = TRUE)
+inidata$Date <- as.Date(inidata$Date,"%d/%m/%Y")
+inidata$Time <- strptime(inidata$Time,format = "%H:%M:%S")
+inidata$Time <- sub(".* ","",inidata$Time)
+data2 <- subset(inidata,Date >= "2007-02-01" & Date <= "2007-02-02")
+rm(inidata)
+## set png device
+png(filename = "Plot3.png")
+##plot
+x <- as.POSIXct(paste(data2$Date,data2$Time),format = "%Y-%m-%d %H:%M:%S")
+with(data2,plot(as.POSIXct(paste(Date,Time),format = "%Y-%m-%d %H:%M:%S"),Sub_metering_1, type = "l",ylab = "Energy sub metering",xlab = ""))
+points(x,data2$Sub_metering_2,type ="l", col = "red" )
+points(x,data2$Sub_metering_3,type ="l", col = "blue" )
+legend("topright",c("Sub metering 1","Sub metering 2","Sub metering 3"), col = c("black","red","blue"), lty = 1)
+## turn device off
+dev.off()
